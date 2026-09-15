@@ -1,4 +1,4 @@
-# Size Reducer
+# Reduceme-Esta
 
 App de escritorio para reducir el peso de videos (pensada para grabaciones de
 pantalla / tutoriales) apuntando a un tamaño de archivo objetivo (200 MB,
@@ -31,7 +31,7 @@ calidad.
 ## Instalación
 
 ```powershell
-cd d:\Dev\size-reducer
+cd d:\Dev\Reduceme-Esta
 python -m venv venv
 .\venv\Scripts\pip install -r requirements.txt
 ```
@@ -39,7 +39,7 @@ python -m venv venv
 ## Uso
 
 ```powershell
-cd d:\Dev\size-reducer\size_reducer
+cd d:\Dev\Reduceme-Esta\reduceme_esta
 ..\venv\Scripts\python main.py
 ```
 
@@ -54,18 +54,18 @@ Pasos en la app:
 ## Empaquetar como .exe standalone (para no depender de Python instalado)
 
 ```powershell
-cd d:\Dev\size-reducer\size_reducer
-..\venv\Scripts\pyinstaller --noconfirm --onefile --windowed --name SizeReducer main.py
+cd d:\Dev\Reduceme-Esta\reduceme_esta
+..\venv\Scripts\pyinstaller --noconfirm --onefile --windowed --name ReducemeEsta main.py
 ```
 
-El ejecutable queda en `size_reducer\dist\SizeReducer.exe`. Este build
+El ejecutable queda en `reduceme_esta\dist\ReducemeEsta.exe`. Este build
 incluye Python y las dependencias, pero **no** incluye el binario de ffmpeg
 (imageio-ffmpeg lo descarga la primera vez que se ejecuta el programa en una
 máquina, y lo cachea). Si necesitas un .exe 100% offline que no descargue
 nada la primera vez, añade el binario de ffmpeg como dato empaquetado:
 
 ```powershell
-..\venv\Scripts\pyinstaller --noconfirm --onefile --windowed --name SizeReducer ^
+..\venv\Scripts\pyinstaller --noconfirm --onefile --windowed --name ReducemeEsta ^
   --add-binary "%LOCALAPPDATA%\imageio_ffmpeg\ffmpeg-win-x86_64-v7.1.exe;imageio_ffmpeg/binaries" ^
   main.py
 ```
@@ -76,7 +76,7 @@ nada la primera vez, añade el binario de ffmpeg como dato empaquetado:
 ## Estructura
 
 ```
-size_reducer/
+reduceme_esta/
   main.py           # punto de entrada
   gui.py            # interfaz Tkinter
   compressor.py      # cálculo de bitrate + ejecución de ffmpeg en 2 pasadas

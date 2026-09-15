@@ -43,7 +43,7 @@ def run_two_pass(input_path, output_path, target_size_mb, audio_kbps=160,
     fps = _target_fps(info.get("fps"))
 
     exe = get_ffmpeg_exe()
-    passlog = os.path.join(tempfile.gettempdir(), f"sizereducer_pass_{os.getpid()}")
+    passlog = os.path.join(tempfile.gettempdir(), f"reducemeesta_pass_{os.getpid()}")
     null_out = "NUL" if sys.platform == "win32" else "/dev/null"
     fps_args = ["-r", str(fps)] if fps else []
 

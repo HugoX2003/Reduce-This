@@ -1,4 +1,4 @@
-# Reduceme-Esta
+# Reduce This
 
 App de escritorio para reducir el peso de videos (pensada para grabaciones de
 pantalla / tutoriales) apuntando a un tamaño de archivo objetivo (200 MB,
@@ -31,15 +31,26 @@ calidad.
 ## Instalación
 
 ```powershell
-cd d:\Dev\Reduceme-Esta
+cd d:\Dev\size-reducer
 python -m venv venv
 .\venv\Scripts\pip install -r requirements.txt
 ```
 
+(Si renombraste la carpeta local, usá esa ruta en vez de `size-reducer`.)
+
 ## Uso
 
 ```powershell
-cd d:\Dev\Reduceme-Esta\reduceme_esta
+cd d:\Dev\size-reducer
+.\venv\Scripts\Activate.ps1
+cd reduce_this
+python main.py
+```
+
+Si preferís no activar el venv, podés llamar al python del venv directo:
+
+```powershell
+cd d:\Dev\size-reducer\reduce_this
 ..\venv\Scripts\python main.py
 ```
 
@@ -54,18 +65,18 @@ Pasos en la app:
 ## Empaquetar como .exe standalone (para no depender de Python instalado)
 
 ```powershell
-cd d:\Dev\Reduceme-Esta\reduceme_esta
-..\venv\Scripts\pyinstaller --noconfirm --onefile --windowed --name ReducemeEsta main.py
+cd d:\Dev\size-reducer\reduce_this
+..\venv\Scripts\pyinstaller --noconfirm --onefile --windowed --name ReduceThis main.py
 ```
 
-El ejecutable queda en `reduceme_esta\dist\ReducemeEsta.exe`. Este build
+El ejecutable queda en `reduce_this\dist\ReduceThis.exe`. Este build
 incluye Python y las dependencias, pero **no** incluye el binario de ffmpeg
 (imageio-ffmpeg lo descarga la primera vez que se ejecuta el programa en una
 máquina, y lo cachea). Si necesitas un .exe 100% offline que no descargue
 nada la primera vez, añade el binario de ffmpeg como dato empaquetado:
 
 ```powershell
-..\venv\Scripts\pyinstaller --noconfirm --onefile --windowed --name ReducemeEsta ^
+..\venv\Scripts\pyinstaller --noconfirm --onefile --windowed --name ReduceThis ^
   --add-binary "%LOCALAPPDATA%\imageio_ffmpeg\ffmpeg-win-x86_64-v7.1.exe;imageio_ffmpeg/binaries" ^
   main.py
 ```
@@ -76,7 +87,7 @@ nada la primera vez, añade el binario de ffmpeg como dato empaquetado:
 ## Estructura
 
 ```
-reduceme_esta/
+reduce_this/
   main.py           # punto de entrada
   gui.py            # interfaz Tkinter
   compressor.py      # cálculo de bitrate + ejecución de ffmpeg en 2 pasadas

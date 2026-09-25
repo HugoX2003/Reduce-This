@@ -7,8 +7,8 @@ calidad.
 
 ## Cómo funciona
 
-- Usa `ffmpeg` (descargado automáticamente por el paquete `imageio-ffmpeg`,
-  no hace falta instalarlo aparte) con codificación de **dos pasadas** en
+- Usa `ffmpeg` (incluido en el paquete `imageio-ffmpeg`, no hace falta
+  instalarlo aparte) con codificación de **dos pasadas** en
   H.264, calculando el bitrate de video necesario para llegar justo al
   tamaño pedido.
 - El audio se codifica en AAC a una tasa fija (128/160/192 kbps a elegir) para
@@ -25,34 +25,70 @@ calidad.
 
 ## Requisitos
 
-- Python 3.10+
-- Windows (probado), aunque el código es portable a otros sistemas.
+- Python 3.10+ **con Tkinter** (la interfaz gráfica lo necesita).
+- Windows (probado) o macOS (Intel y Apple Silicon).
+- Conexión a internet solo para instalar las dependencias. `ffmpeg` no hay
+  que instalarlo aparte: lo trae el paquete `imageio-ffmpeg`.
+
+### Windows
+
+Instalá Python desde https://www.python.org/downloads/ (Tkinter ya viene
+incluido). Marcá "Add python.exe to PATH" en el instalador.
+
+### macOS
+
+Lo más simple es instalar Python desde https://www.python.org/downloads/macos/
+(Tkinter viene incluido). Si usás Homebrew, hace falta agregar Tk aparte:
+
+```bash
+brew install python python-tk
+```
 
 ## Instalación
 
+Clonar el repo y crear el entorno virtual con las dependencias.
+
+Windows (PowerShell):
+
 ```powershell
-cd d:\Dev\size-reducer
+git clone https://github.com/HugoX2003/Reduce-This.git
+cd Reduce-This
 python -m venv venv
 .\venv\Scripts\pip install -r requirements.txt
 ```
 
-(Si renombraste la carpeta local, usá esa ruta en vez de `size-reducer`.)
+macOS (Terminal):
+
+```bash
+git clone https://github.com/HugoX2003/Reduce-This.git
+cd Reduce-This
+python3 -m venv venv
+./venv/bin/pip install -r requirements.txt
+```
 
 ## Uso
 
+Windows (PowerShell):
+
 ```powershell
-cd d:\Dev\size-reducer
+cd Reduce-This
 .\venv\Scripts\Activate.ps1
 cd reduce_this
 python main.py
 ```
 
-Si preferís no activar el venv, podés llamar al python del venv directo:
+macOS (Terminal):
 
-```powershell
-cd d:\Dev\size-reducer\reduce_this
-..\venv\Scripts\python main.py
+```bash
+cd Reduce-This
+source venv/bin/activate
+cd reduce_this
+python main.py
 ```
+
+Si preferís no activar el venv, llamá al python del venv directo, desde la
+carpeta `reduce_this`: `..\venv\Scripts\python main.py` en Windows, o
+`../venv/bin/python main.py` en macOS.
 
 Pasos en la app:
 1. "Seleccionar..." el video de entrada.
@@ -62,27 +98,33 @@ Pasos en la app:
    `nombre_reducido.mp4` al lado del original).
 5. "Comprimir" y esperar. Se puede cancelar en cualquier momento.
 
-## Empaquetar como .exe standalone (para no depender de Python instalado)
+## Empaquetar como app standalone (para no depender de Python instalado)
+
+PyInstaller no compila de un sistema a otro: el `.exe` hay que generarlo en
+Windows y el `.app` en un Mac. El binario de ffmpeg viene dentro del paquete
+`imageio-ffmpeg` (no se descarga al ejecutar); `--collect-all` asegura que
+quede incluido en el build.
+
+Windows (PowerShell):
 
 ```powershell
-cd d:\Dev\size-reducer\reduce_this
-..\venv\Scripts\pyinstaller --noconfirm --onefile --windowed --name ReduceThis main.py
+cd reduce_this
+..\venv\Scripts\pyinstaller --noconfirm --onefile --windowed --collect-all imageio_ffmpeg --name ReduceThis main.py
 ```
 
-El ejecutable queda en `reduce_this\dist\ReduceThis.exe`. Este build
-incluye Python y las dependencias, pero **no** incluye el binario de ffmpeg
-(imageio-ffmpeg lo descarga la primera vez que se ejecuta el programa en una
-máquina, y lo cachea). Si necesitas un .exe 100% offline que no descargue
-nada la primera vez, añade el binario de ffmpeg como dato empaquetado:
+Queda en `reduce_this\dist\ReduceThis.exe`.
 
-```powershell
-..\venv\Scripts\pyinstaller --noconfirm --onefile --windowed --name ReduceThis ^
-  --add-binary "%LOCALAPPDATA%\imageio_ffmpeg\ffmpeg-win-x86_64-v7.1.exe;imageio_ffmpeg/binaries" ^
-  main.py
+macOS (Terminal):
+
+```bash
+cd reduce_this
+../venv/bin/pyinstaller --noconfirm --windowed --collect-all imageio_ffmpeg --name ReduceThis main.py
 ```
 
-(Ajusta la ruta del binario según lo que imprima
-`python -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())"`.)
+Queda en `reduce_this/dist/ReduceThis.app`. Como la app no está firmada por
+Apple, la primera vez macOS la bloquea: click derecho sobre la app → Abrir →
+Abrir (o Ajustes del Sistema → Privacidad y seguridad → "Abrir de todos
+modos").
 
 ## Estructura
 
